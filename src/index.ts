@@ -28,8 +28,26 @@ interface Dict<T> {
 }
 
 // Array.prototype.map, but for Dict
-function mapDict(...args: any[]): any {}
+function mapDict<T>(
+  dict: Dict<T>,
+  callback: (value: T, key: string) => T
+): Dict<T> {
+  const objKeys = Object.keys(dict);
+  const result: Dict<T> = {};
+  objKeys.map((key) => {
+    result[key] = callback(dict[key], key);
+  });
+  return result;
+}
+
 // Array.prototype.filter, but for Dict
 function filterDict(...args: any[]): any {}
 // Array.prototype.reduce, but for Dict
 function reduceDict(...args: any[]): any {}
+
+const test = mapDict(students, (student) => ({
+  ...student,
+  gpa: student.gpa * 10,
+}));
+
+console.log(test);
