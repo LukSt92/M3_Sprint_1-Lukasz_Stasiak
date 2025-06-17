@@ -41,13 +41,33 @@ function mapDict<T>(
 }
 
 // Array.prototype.filter, but for Dict
-function filterDict(...args: any[]): any {}
+function filterDict<T>(
+  dict: Dict<T>,
+  callback: (value: T, key: string) => boolean
+): Dict<T> {
+  const objKeys = Object.keys(dict);
+  const result: Dict<T> = {};
+  objKeys.filter((key) => {
+    if (callback(dict[key], key)) result[key] = dict[key];
+  });
+  return result;
+}
+
 // Array.prototype.reduce, but for Dict
 function reduceDict(...args: any[]): any {}
 
-const test = mapDict(students, (student) => ({
+const mapTest = mapDict(students, (student) => ({
   ...student,
   gpa: student.gpa * 10,
 }));
 
-console.log(test);
+console.log(mapTest);
+
+const filterTest = filterDict(cars, (car) => car.price > 50000);
+const filterTest2 = filterDict(
+  cars,
+  (car) => car.color === "black" || car.color === "silver"
+);
+
+console.log(filterTest);
+console.log(filterTest2);
