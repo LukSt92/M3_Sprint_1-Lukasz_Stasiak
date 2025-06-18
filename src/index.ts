@@ -54,7 +54,17 @@ function filterDict<T>(
 }
 
 // Array.prototype.reduce, but for Dict
-function reduceDict(...args: any[]): any {}
+function reduceDict<T, U>(
+  dict: Dict<T>,
+  callback: (acc: U, value: T, key: string) => U,
+  initialValue: U
+): U {
+  const objKeys = Object.keys(dict);
+  return objKeys.reduce(
+    (acc, key) => callback(acc, dict[key], key),
+    initialValue
+  );
+}
 
 const mapTest = mapDict(students, (student) => ({
   ...student,
@@ -71,3 +81,18 @@ const filterTest2 = filterDict(
 
 console.log(filterTest);
 console.log(filterTest2);
+
+const reduceTest = reduceDict(cars, (acc, car) => acc + car.price, 0);
+
+console.log(reduceTest);
+
+const filterTest3 = filterDict(
+  cars,
+  (car) => car.price > 20000 && car.price < 50000
+);
+
+console.log(filterTest3);
+
+const reduceTest2 = reduceDict(filterTest3, (acc, car) => acc + car.price, 0);
+
+console.log(reduceTest2);
